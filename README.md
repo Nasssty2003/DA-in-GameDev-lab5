@@ -88,6 +88,48 @@ pip install torch~=1.7.1 -f
 
 ![3](https://user-images.githubusercontent.com/43472988/205028302-009410e4-8485-4d29-9aa3-2179da699a9b.png)
 
+6) Меняем параметры yaml-агента:
+
+- batch_size (с 1024 на 4096)
+
+```
+behaviors:
+  Economic:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 4096
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      beta: 1.0e-2
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3      
+    network_settings:
+      normalize: false
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    checkpoint_interval: 500000
+    max_steps: 750000
+    time_horizon: 64
+    summary_freq: 5000
+    self_play:
+      save_steps: 20000
+      team_change: 100000
+      swap_steps: 10000
+      play_against_latest_model_ratio: 0.5
+      window: 10
+```
+
+Полученные графики:
+
+![1ю1](https://user-images.githubusercontent.com/43472988/205039826-06806beb-7bd3-4bbd-93a6-526f8d519b87.png)
+
+![1ю2](https://user-images.githubusercontent.com/43472988/205039831-71f2494a-a08f-4aad-8847-90a83fba0f3d.png)
 
 ## Задание 2
 
@@ -126,142 +168,6 @@ double DotProductBias(double[] v1, double[] v2)
 		return (0);
 	}
 ```
-  
-## Задание 3
-
-## Построить визуальную модель работы перцептрона на сцене Unity.
-
-Визуализация заключается в смене цвета объекта при его соприкосновении с поверхностью. Цвет зависит от результата логической операции: если получается 0, то цвет меняется на красный, а если же 1 - на зелёный.
-Преобразованный код:
-
-```
-[System.Serializable]
-public class TrainingSet
-{
-	public double[] input;
-	public double output;
-}
-
-public class Perceptron : MonoBehaviour {
-
-	public int num1, num2; //создаём две переменные для чисел, к которым применяются логические операции
-
-	public TrainingSet[] ts;
-	double[] weights = {0,0};
-	double bias = 0;
-	double totalError = 0;
-
-	double DotProductBias(double[] v1, double[] v2) 
-	{
-		if (v1 == null || v2 == null)
-			return -1;
-	 
-		if (v1.Length != v2.Length)
-			return -1;
-	 
-		double d = 0;
-		for (int x = 0; x < v1.Length; x++)
-		{
-			d += v1[x] * v2[x];
-		}
-
-		d += bias;
-	 
-		return d;
-	}
-
-	double CalcOutput(int i)
-	{
-		double dp = DotProductBias(weights,ts[i].input);
-		if(dp > 0) return(1);
-		return (0);
-	}
-
-	void InitialiseWeights()
-	{
-		for(int i = 0; i < weights.Length; i++)
-		{
-			weights[i] = Random.Range(-1.0f,1.0f);
-		}
-		bias = Random.Range(-1.0f,1.0f);
-	}
-
-	void UpdateWeights(int j)
-	{
-		double error = ts[j].output - CalcOutput(j);
-		totalError += Mathf.Abs((float)error);
-		for(int i = 0; i < weights.Length; i++)
-		{			
-			weights[i] = weights[i] + error*ts[j].input[i]; 
-		}
-		bias += error;
-	}
-
-	public double CalcOutput(double i1, double i2)
-	{
-		double[] inp = new double[] {i1, i2};
-		double dp = DotProductBias(weights,inp);
-		if(dp > 0) return(1);
-		return (0);
-	}
-
-	void Train(int epochs)
-	{
-		InitialiseWeights();
-		
-		for(int e = 0; e < epochs; e++)
-		{
-			totalError = 0;
-			for(int t = 0; t < ts.Length; t++)
-			{
-				UpdateWeights(t);
-				Debug.Log("W1: " + (weights[0]) + " W2: " + (weights[1]) + " B: " + bias);
-			}
-			Debug.Log("TOTAL ERROR: " + totalError);
-		}
-	}
-
-	void Start () {
-		Train(8);
-		var value = CalcOutput(num1, num2);
-		ChangeColor.OnSearchValue(value);
-		Debug.Log("Test 0 0: " + CalcOutput(num1, num2));	
-	}
-//также создаём класс перемены цвета	
-public class ChangeColor : MonoBehaviour
-{
-    static double value = 0;
-
-    public void OnTriggerEnter(Collider other) {
-    	//если итоговое значение равно 0, то объект меняет цвет на красный, а если 1 - на зелёный.
-        if (value == 0)
-            other.gameObject.GetComponent<Renderer>().material.color = Color.red;
-        else
-            other.gameObject.GetComponent<Renderer>().material.color = Color.green;
-    }
-
-    public static void OnSearchValue(double answer) {
-        value = answer;
-    }
-}
-```
-
-На скринах ниже можно увидеть результат работы данного кода на примере операции NAND.
-1) num1 = 0, num2 = 0:
-
-![00](https://user-images.githubusercontent.com/43472988/204391750-c822856e-a796-40a3-9300-4086d13531de.jpg)
-
-2) num1 = 0, num2 = 1:
-
-![01](https://user-images.githubusercontent.com/43472988/204391785-954a7e11-5f1d-4316-a976-3bd7669ffc70.jpg)
-
-3) num1 = 1, num2 = 0:
-
-![10](https://user-images.githubusercontent.com/43472988/204391830-e5292b60-198c-458c-b1d8-931fb48ac354.jpg)
-
-5) num1 = 1, num2 = 1:
-
-![11](https://user-images.githubusercontent.com/43472988/204391886-c12cb87e-c40b-458e-ba09-5a7505a51e82.jpg)
 	
 ## Выводы
 Лабораторная работа познакомила меня с такой моделью, как перцептрон. Я смогла понаблюдать за его принципами и работой, изучила код на python. Также я поработала с различными логическими операциями и визуализировала их работу в проекте Unity. 
