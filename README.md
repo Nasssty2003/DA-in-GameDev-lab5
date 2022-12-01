@@ -81,10 +81,10 @@ pip install torch~=1.7.1 -f
 
 5) Устанавливаем библиотеку TensorBoard (pip install tensorflow) для того, чтобы построить графики оценки результатов обучения.
    Первоначальные данные:
-   
-![1](https://user-images.githubusercontent.com/43472988/205028037-4a6258f3-b7fe-4bd8-84a4-44a41a0aa6d4.png
 
-![2](https://user-images.githubusercontent.com/43472988/205028200-f3734c40-83fb-4448-8934-d9b164ae95a4.png)
+![1](https://user-images.githubusercontent.com/43472988/205028611-5d11ffc0-e910-454e-b74e-a4bf109573bf.png)
+
+![2](https://user-images.githubusercontent.com/43472988/205028628-2ed25c0b-40cb-47bb-9506-587e47d5764d.png)
 
 ![3](https://user-images.githubusercontent.com/43472988/205028302-009410e4-8485-4d29-9aa3-2179da699a9b.png)
 
