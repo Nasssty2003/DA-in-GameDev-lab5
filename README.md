@@ -213,19 +213,98 @@ behaviors:
 
 ![3ю2](https://user-images.githubusercontent.com/43472988/205085412-a9105ebb-2a7a-4f99-8dbd-81e8f50f53fe.png)
 
+- epsilon (c 0.2 на 1.2)
+
+```
+behaviors:
+  Economic:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      beta: 1.0e-2
+      epsilon: 1.2
+      lambd: 0.95
+      num_epoch: 3      
+    network_settings:
+      normalize: false
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    checkpoint_interval: 500000
+    max_steps: 750000
+    time_horizon: 64
+    summary_freq: 5000
+    self_play:
+      save_steps: 20000
+      team_change: 100000
+      swap_steps: 10000
+      play_against_latest_model_ratio: 0.5
+      window: 10
+```
+Полученные графики:
+
+![4ю1](https://user-images.githubusercontent.com/43472988/205099474-e082feb0-0765-43f3-b1c2-94172e92e026.png)
+
+![4ю2](https://user-images.githubusercontent.com/43472988/205099536-f8219229-03ed-4eec-bec8-6f2e4fd75319.png)
+
+- lambd (c 0.95 на 0.1)
+
+```
+behaviors:
+  Economic:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      beta: 1.0e-2
+      epsilon: 0.2
+      lambd: 0.1
+      num_epoch: 3      
+    network_settings:
+      normalize: false
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    checkpoint_interval: 500000
+    max_steps: 750000
+    time_horizon: 64
+    summary_freq: 5000
+    self_play:
+      save_steps: 20000
+      team_change: 100000
+      swap_steps: 10000
+      play_against_latest_model_ratio: 0.5
+      window: 10
+```
+Полученные графики:
+
+![5ю1](https://user-images.githubusercontent.com/43472988/205100323-a0d37242-fcfc-4dd1-9578-b52533feff33.png)
+
+![5ю2](https://user-images.githubusercontent.com/43472988/205100330-22d717af-9609-4ec5-ac01-7f08d5d2a51f.png)
+
+Рассмотрев все полученные графики, можно сделать следующие выводы. Изменение многих вышеперечисленных значений не особо влияет на графики, так как они либо не изменяются, либо делюъают это незначительно. Если говорить чуть конкретнее, то график Extrinsic Value Estimate, например, растет вверх при изменении всех значений кроме  epsilon. Также можно заметить, что при изменении параметра num_layers, график меняется относительно первоначальной версии и обучение становится дольше по времени. Но в общем нужно сказать, что данные изменения в большей степени имеют положительный эффект на обучении модели. 
 
 ## Задание 2
 
-## Построить графики зависимости количества эпох от ошибки обучения. Указать от чего зависит необходимое количество эпох обучения.
+## Опишите результаты, выведенные в TensorBoard.
 
-Для создания графиков я собрала данные благодаря проеку в Unity. Меняя количество эпох, я получала различные значения для каждой логической операции , которые и записывала в таблицу, после чего создала диаграмму по этой таблице.
 
-![Снимок экрана 2022-11-29 в 02 04 19](https://user-images.githubusercontent.com/43472988/204380921-ee47f941-b923-4d37-9d7d-4b8df65c63f3.png)
 
-Рассмотрев таюлицу, её данные и графики, а также изучив лекцию, я сделала вывод, что необходимое количество эпох обучения зависит от значений bias(смещение) и weights(вес). Нижеприведённая часть данного код работы перцептрона является подтверждением данной гипотезы, а в частности методы DotProductBias и CalcOutput:
+
 	
 ## Выводы
-Лабораторная работа познакомила меня с такой моделью, как перцептрон. Я смогла понаблюдать за его принципами и работой, изучила код на python. Также я поработала с различными логическими операциями и визуализировала их работу в проекте Unity. 
+Лабораторная работа позволила мне больше углубиться в работу с MLAgent и научиться с его помощью внедрять некоторую экономику в проект Unity. Также я меняла параметры yaml-файла и наблюдала за тем, каким образом это влияет на результаты обучения MLAgent. Эти наблюдения, а также анализ, я проводила благодаря библиотеке TensorBoard, которая позволила мне создавать графики, дающие более наглядный формат данных.
 
 | Plugin | README |
 | ------ | ------ |
