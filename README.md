@@ -132,7 +132,7 @@ behaviors:
 ![1ю2](https://user-images.githubusercontent.com/43472988/205039831-71f2494a-a08f-4aad-8847-90a83fba0f3d.png)
 
 
--buffer_size (с 10240 на 150)
+- buffer_size (с 10240 на 150)
 
 ```
 behaviors:
@@ -173,6 +173,47 @@ behaviors:
 
 ![2ю2](https://user-images.githubusercontent.com/43472988/205084200-82683c4d-8034-4bab-bcb4-f4a3c58d011e.png)
 
+- num_layers (с 2 на 100)
+
+```
+behaviors:
+  Economic:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 10240
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      beta: 1.0e-2
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3      
+    network_settings:
+      normalize: false
+      hidden_units: 128
+      num_layers: 100
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    checkpoint_interval: 500000
+    max_steps: 750000
+    time_horizon: 64
+    summary_freq: 5000
+    self_play:
+      save_steps: 20000
+      team_change: 100000
+      swap_steps: 10000
+      play_against_latest_model_ratio: 0.5
+      window: 10
+```
+Полученные графики:
+
+![3ю1](https://user-images.githubusercontent.com/43472988/205085402-34e1a195-275d-49f4-977c-c44cf7258f2f.png)
+
+![3ю2](https://user-images.githubusercontent.com/43472988/205085412-a9105ebb-2a7a-4f99-8dbd-81e8f50f53fe.png)
+
+
 ## Задание 2
 
 ## Построить графики зависимости количества эпох от ошибки обучения. Указать от чего зависит необходимое количество эпох обучения.
@@ -182,34 +223,6 @@ behaviors:
 ![Снимок экрана 2022-11-29 в 02 04 19](https://user-images.githubusercontent.com/43472988/204380921-ee47f941-b923-4d37-9d7d-4b8df65c63f3.png)
 
 Рассмотрев таюлицу, её данные и графики, а также изучив лекцию, я сделала вывод, что необходимое количество эпох обучения зависит от значений bias(смещение) и weights(вес). Нижеприведённая часть данного код работы перцептрона является подтверждением данной гипотезы, а в частности методы DotProductBias и CalcOutput:
-
-```
-double DotProductBias(double[] v1, double[] v2) 
-	{
-		if (v1 == null || v2 == null)
-			return -1;
-	 
-		if (v1.Length != v2.Length)
-			return -1;
-	 
-		double d = 0;
-		for (int x = 0; x < v1.Length; x++)
-		{
-			d += v1[x] * v2[x];
-		}
-
-		d += bias;
-	 
-		return d;
-	}
-
-	double CalcOutput(int i)
-	{
-		double dp = DotProductBias(weights,ts[i].input);
-		if(dp > 0) return(1);
-		return (0);
-	}
-```
 	
 ## Выводы
 Лабораторная работа познакомила меня с такой моделью, как перцептрон. Я смогла понаблюдать за его принципами и работой, изучила код на python. Также я поработала с различными логическими операциями и визуализировала их работу в проекте Unity. 
