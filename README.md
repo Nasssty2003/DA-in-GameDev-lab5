@@ -131,6 +131,48 @@ behaviors:
 
 ![1ю2](https://user-images.githubusercontent.com/43472988/205039831-71f2494a-a08f-4aad-8847-90a83fba0f3d.png)
 
+
+-buffer_size (с 10240 на 150)
+
+```
+behaviors:
+  Economic:
+    trainer_type: ppo
+    hyperparameters:
+      batch_size: 1024
+      buffer_size: 150
+      learning_rate: 3.0e-4
+      learning_rate_schedule: linear
+      beta: 1.0e-2
+      epsilon: 0.2
+      lambd: 0.95
+      num_epoch: 3      
+    network_settings:
+      normalize: false
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    checkpoint_interval: 500000
+    max_steps: 750000
+    time_horizon: 64
+    summary_freq: 5000
+    self_play:
+      save_steps: 20000
+      team_change: 100000
+      swap_steps: 10000
+      play_against_latest_model_ratio: 0.5
+      window: 10
+```
+
+Полученные графики:
+
+![2ю1](https://user-images.githubusercontent.com/43472988/205084197-d5b059d1-46be-4a6d-9619-b6bdc80d6338.png)
+
+![2ю2](https://user-images.githubusercontent.com/43472988/205084200-82683c4d-8034-4bab-bcb4-f4a3c58d011e.png)
+
 ## Задание 2
 
 ## Построить графики зависимости количества эпох от ошибки обучения. Указать от чего зависит необходимое количество эпох обучения.
